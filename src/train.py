@@ -47,10 +47,8 @@ test_y = test[["quality"]]
 
 # start training loop to test 10 different hyperparameter settings
 num = 5
-count = 0
 for x in range(num):
     for y in range(num):
-        count += 1
         # set hyperparameters based on loop variable (0.01 to 0.91)
         alpha = 0.01 + x / num
         l1_ratio = 0.01 + y / num
@@ -65,7 +63,7 @@ for x in range(num):
             # calculate evaluation metrics based on prediction results
             (rmse, mae, r2) = eval_metrics(test_y, predicted_qualities)
 
-            print("Training loop #%s" % (count))
+            print("Training loop #%s" % (x * num + y + 1))
             print("  ElasticNet model (alpha=%f, l1_ratio=%f):" % (alpha, l1_ratio))
             print("    RMSE: %s" % rmse)
             print("    MAE: %s" % mae)
