@@ -33,4 +33,10 @@ jobs:
         
       - name: Run auto-training script
         run: python src/train.py
+
+      - name: Show results in mlflow UI website
+        uses: actions/upload-artifact@v2
+        with:
+          name: mlflow-ui
+          path: mlruns
         
