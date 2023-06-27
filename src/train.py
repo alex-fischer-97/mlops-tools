@@ -46,28 +46,37 @@ train_y = train[["quality"]]
 test_y = test[["quality"]]
 
 # start training loop to test 10 different hyperparameter settings
-for x in range(10):
+num = 5
+count = 0
+for x in range(num):
+    for y in range(num):
+        count += 1
+        # set hyperparameters based on loop variable (0.01 to 0.91)
+        alpha = 0.01 + x / num
+        l1_ratio = 0.01 + y / num
 
-    # set hyperparameters based on loop variable (0.01 to 0.91)
-    alpha = 0.01 + x / 10
-    l1_ratio = 0.01 + x / 10
+        with mlflow.start_run():
+            # instantiate the model
+            lr = ElasticNet(alpha=alpha, l1_ratio=l1_ratio, random_state=42)
+            # train the model with the training data
+            lr.fit(train_x, train_y)
+            # evaluate the model on the test data
+            predicted_qualities = lr.predict(test_x)
+            # calculate evaluation metrics based on prediction results
+            (rmse, mae, r2) = eval_metrics(test_y, predicted_qualities)
 
-    with mlflow.start_run():
-        # instantiate the model
-        lr = ElasticNet(alpha=alpha, l1_ratio=l1_ratio, random_state=42)
-        # train the model with the training data
-        lr.fit(train_x, train_y)
-        # evaluate the model on the test data
-        predicted_qualities = lr.predict(test_x)
-        # calculate evaluation metrics based on prediction results
-        (rmse, mae, r2) = eval_metrics(test_y, predicted_qualities)
+            print("Training loop #%s" % (count))
+            print("  ElasticNet model (alpha=%f, l1_ratio=%f):" % (alpha, l1_ratio))
+            print("    RMSE: %s" % rmse)
+            print("    MAE: %s" % mae)
+            print("    R2: %s" % r2)
 
-        print("Training loop #%s" % (x + 1))
-        print("  Elasticnet model (alpha=%f, l1_ratio=%f):" % (alpha, l1_ratio))
-        print("    RMSE: %s" % rmse)
-        print("    MAE: %s" % mae)
-        print("    R2: %s" % r2)
+            # TODO: log the two experiment params and the three evaluation metrics using mlflow 
+            mlflow.log_param("alpha", alpha)
+            mlflow.log_param("l1_ratio", l1_ratio)
+            mlflow.log_metric("rmse", rmse)
+            mlflow.log_metric("mae", mae)
+            mlflow.log_metric("r2", r2)
 
-        # TODO: log the two experiment params and the three evaluation metrics using mlflow
-
-        # TODO: store the model using mlflow
+            # TODO: store the model using mlflow
+            mlflow.sklearn.log_model(lr, "model")
