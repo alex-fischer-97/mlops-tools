@@ -1,13 +1,14 @@
 # adapted from https://github.com/mlflow/mlflow/blob/master/examples/sklearn_elasticnet_wine/train.py
 
-import pandas as pd
-import numpy as np
-from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
-from sklearn.model_selection import train_test_split
-from sklearn.linear_model import ElasticNet
+import logging
+
 import mlflow
 import mlflow.sklearn
-import logging
+import numpy as np
+import pandas as pd
+from sklearn.linear_model import ElasticNet
+from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
+from sklearn.model_selection import train_test_split
 
 logging.basicConfig(level=logging.WARN)
 logger = logging.getLogger(__name__)
