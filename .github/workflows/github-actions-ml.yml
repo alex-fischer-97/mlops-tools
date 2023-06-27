@@ -4,9 +4,7 @@ name: GitHub Actions ML
 
 on:
   push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+    branches: [ main, own_solution ]
 
 jobs:
   build:
