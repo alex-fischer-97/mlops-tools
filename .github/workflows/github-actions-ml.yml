@@ -32,14 +32,16 @@ jobs:
         run: dvc pull
 
       - name: Create variable for logfile name
-        run: echo "logfile_$(date +"%Y-%m-%d_%H-%M-%S").txt" >> $GITHUB_ENV
+        run: |
+          echo "LOGFILE=training_$(date +'%Y%m%d_%H%M%S').txt" >> $GITHUB_ENV
+          echo $LOGFILE
         
       - name: Run auto-training script and redirect output to defined logfile
-        run: python src/train.py | tee ${{ env.logfile }}
+        run: python src/train.py | tee $LOGFILE
 
       - name: Upload logfile as artifact
         uses: actions/upload-artifact@v2
         with:
           name: Logfile training
-          path: ${{ env.logfile }}
+          path: $LOGFILE
         
