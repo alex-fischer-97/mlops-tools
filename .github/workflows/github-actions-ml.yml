@@ -31,12 +31,12 @@ jobs:
       - name: Import data from DVC
         run: dvc pull
         
-      - name: Run auto-training script
-        run: python src/train.py
+      - name: Run auto-training script and redirect output to logfile
+        run: python src/train.py > logfile_$(date +"%Y-%m-%d_%H-%M-%S").txt
 
-      - name: Show results in mlflow UI website
+      - name: Upload logfile as artifact
         uses: actions/upload-artifact@v2
         with:
-          name: mlflow-ui
-          path: mlruns
+          name: Logfile training
+          path: logfile_$(date +"%Y-%m-%d_%H-%M-%S").txt
         
